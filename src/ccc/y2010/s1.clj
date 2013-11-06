@@ -15,6 +15,7 @@
 (defn main
   "Returns the names of the two best computers in the collection."
   [computers]
-  (->> (sort-by worth > computers)
+  (->> computers
+       (sort-by worth >)
        (take 2)
        (map first)))

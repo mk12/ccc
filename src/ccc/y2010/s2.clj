@@ -8,6 +8,11 @@
 ;;; A "Huffman code" is a map from binary sequences (representing individual
 ;;; codes) to strings (representing the decoded value).
 
+;http://stackoverflow.com/questions/1528632/how-do-you-use-sorted-map-by-in-clojure
+(defn sort-huffman
+  "Sorts a Huffman code by the length of its codes."
+  nil)
+
 (defn main
   "Decodes coded-message (a binary sequence) using huffman (a Huffman code)."
   [huffman coded-message]
