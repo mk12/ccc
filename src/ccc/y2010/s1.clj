@@ -9,11 +9,11 @@
 
 (defn worth
   "Calculates how much a computer is worth."
-  [[_ ram freq disk]]
-  (+ (* 2 ram) (* 3 freq) disk))
+  [[_ ram speed disk]]
+  (+ (* 2 ram) (* 3 speed) disk))
 
 (defn main
-  "Returns the names of the two best computers."
+  "Returns the names of the two best computers in the collection."
   [computers]
   (->> (sort-by worth > computers)
        (take 2)
