@@ -6,5 +6,5 @@
 
 (defn main
   ""
-  []
+  [[ax ay] [bx by]]
   nil)

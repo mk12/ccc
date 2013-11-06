@@ -10,6 +10,7 @@
   [coll]
   (map - (rest coll) coll))
 
+;;; TODO: This doesn't work. Needs the full algorithm.
 (defn cycle-length
   "Uses a simplified version of Floyd's cycle-finding algorithm (tortoise and
   the hare) to find the length of the shortest cycle in the collection."
