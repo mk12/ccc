@@ -5,22 +5,23 @@
 (ns ccc.y2010.s2)
 
 ;;; A "binary sequence" is a string containing only ASCII 0 and 1.
-;;; A "Huffman code" is a collection of strings of the form
-;;;     [code val code val code val ...]
-;;; where code is a binary sequence and val is the value that it represents.
+;;; A "code" is a binary sequence that represents a value (char or string).
+;;; A "Huffman map" is a map from codes to values.
 
-(defn sort-huffman
-  "Sorts a Huffman code by the length of its codes."
-  [huffman]
-  (apply hash-map huffman))
-  ;; (apply sorted-map-by #(<= (count %1) (count %2))
-  ;;        huffman))
+(defn decode-bit
+  "Decodes a single bit using huff-map and given [buf msg] where buf is a
+  collection of bits that have not yet been decoded and msg is the decoded
+  message so far."
+  [huff-map [buf msg] bit]
+  (let [new-buf (conj buf bit)]
+    (if-let [value (huff-map (apply str new-buf))]
+      [[] (conj msg value)]
+      [new-buf msg])))
 
 (defn main
-  "Decodes bin-seq (a binary sequence) using huffman (a Huffman code)."
-  [huffman bin-seq]
-  (let [huff (sort-huffman huffman)]
-    (loop [more bin-seq, code [], msg []]
-      (if-let [value (first (map huff code))]
-        (recur (rest more) [(first more)] (conj msg value))
-        (recur (rest more) (conj code (first more)) msg)))))
+  "Decodes bin-seq (a binary sequence) using huff-map (a Huffman map)."
+  [huff-map bin-seq]
+  (let [decode (partial decode-bit huff-map)]
+    (->> (reduce decode [[] []] bin-seq)
+         (second)
+         (apply str))))
