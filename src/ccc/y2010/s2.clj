@@ -5,17 +5,22 @@
 (ns ccc.y2010.s2)
 
 ;;; A "binary sequence" is a string containing only ASCII 0 and 1.
-;;; A "Huffman code" is a map from binary sequences (representing individual
-;;; codes) to strings (representing the decoded value).
+;;; A "Huffman code" is a collection of strings of the form
+;;;     [code val code val code val ...]
+;;; where code is a binary sequence and val is the value that it represents.
 
-;http://stackoverflow.com/questions/1528632/how-do-you-use-sorted-map-by-in-clojure
 (defn sort-huffman
   "Sorts a Huffman code by the length of its codes."
-  nil)
+  [huffman]
+  (apply hash-map huffman))
+  ;; (apply sorted-map-by #(<= (count %1) (count %2))
+  ;;        huffman))
 
 (defn main
-  "Decodes coded-message (a binary sequence) using huffman (a Huffman code)."
-  [huffman coded-message]
-  (loop [code coded-message, msg []]
-    ;something
-    nil))
+  "Decodes bin-seq (a binary sequence) using huffman (a Huffman code)."
+  [huffman bin-seq]
+  (let [huff (sort-huffman huffman)]
+    (loop [more bin-seq, code [], msg []]
+      (if-let [value (first (map huff code))]
+        (recur (rest more) [(first more)] (conj msg value))
+        (recur (rest more) (conj code (first more)) msg)))))
