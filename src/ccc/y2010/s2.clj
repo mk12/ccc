@@ -5,13 +5,13 @@
 (ns ccc.y2010.s2)
 
 ;;; A "binary sequence" is a string containing only ASCII 0 and 1.
-;;; A "code" is a binary sequence that represents a value (char or string).
+;;; A "code" is a binary sequence that represents a value.
+;;; A "value" is a char or a string.
 ;;; A "Huffman map" is a map from codes to values.
 
 (defn decode-bit
-  "Decodes a single bit using huff-map and given [buf msg] where buf is a
-  collection of bits that have not yet been decoded and msg is the decoded
-  message so far."
+  "Decodes a single bit using huff-map and [buf msg] where buf is a collection
+  of bits that have not yet been decoded and msg is the decoded message so far."
   [huff-map [buf msg] bit]
   (let [new-buf (conj buf bit)]
     (if-let [value (huff-map (apply str new-buf))]

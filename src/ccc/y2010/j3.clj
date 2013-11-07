@@ -36,4 +36,4 @@
   returns its output as a collection of integers with one integer for each
   output command (2)."
   [instructions]
-  (reduce execute {:a 0 :b 0 :out []} instructions))
+  (:out (reduce execute {:a 0 :b 0 :out []} instructions)))

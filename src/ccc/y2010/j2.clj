@@ -16,6 +16,9 @@
 (defn main
   "Returns the name of the person who has gone furthest after s steps."
   [a b c d s]
-  (if (> (displacement a b s) (displacement c d s))
-    "Nikki"
-    "Byron"))
+  (let [c (compare (displacement a b s)
+                   (displacement c d s))]
+    (cond
+      (pos? c) "Nikky"
+      (zero? c) "Tied"
+      (neg? c) "Byron")))
