@@ -10,18 +10,20 @@
   [coll]
   (map - (rest coll) coll))
 
-(defn helper
-  [cyc n]
-  nil)
+(defn scan-val
+  "Scans the value x and returns a new [acc n] where acc is a collection of
+  values representing the shortest cycle so far and n represents the number of
+  repeating values after the end of the first cycle that have been scanned."
+  [[acc n] x]
+  (if (= (get acc n) x)
+    [acc (inc n)]
+    (let [repeats (take n (cycle acc))]
+      [(conj (into acc repeats) x) 0])))
 
-(defn cycle-length
-  "Finds the length of the shortest cycle in coll."
-  [coll]
-  (-> (reduce #() [[] 0] coll)
-      (first)
-      (count)))
-
-(def main
+(defn main
   "Finds the length of the shortest cycle in the first differences of coll."
   [coll]
-  (cycle-length (first-differences coll)))
+  (->> (first-differences coll)
+       (reduce scan-val [[] 0])
+       (first)
+       (count)))
