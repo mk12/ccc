@@ -10,20 +10,18 @@
   [coll]
   (map - (rest coll) coll))
 
-;;; TODO: This doesn't work. Needs the full algorithm.
+(defn helper
+  [cyc n]
+  nil)
+
 (defn cycle-length
-  "Uses a simplified version of Floyd's cycle-finding algorithm (tortoise and
-  the hare) to find the length of the shortest cycle in the collection."
+  "Finds the length of the shortest cycle in coll."
   [coll]
-  (let [values (vec coll)]
-    (loop [t 0 h 1]
-      (let [tortoise (get values t)
-            hare (get values h)]
-        (cond
-          (nil? hare) (count values)
-          (= tortoise hare) (- h t)
-          :else (recur (inc t) (+ 2 h)))))))
+  (-> (reduce #() [[] 0] coll)
+      (first)
+      (count)))
 
 (def main
-  "Calculates the length of the shortest cycle in the collection."
-  (comp cycle-length first-differences))
+  "Finds the length of the shortest cycle in the first differences of coll."
+  [coll]
+  (cycle-length (first-differences coll)))
