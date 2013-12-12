@@ -13,10 +13,24 @@
 ;;; A "receipt" is a map from edges to integers representing the cost of
 ;;; trampling that edge.
 
-(defn has-edge
-  "Returns true if the pen has the given edge."
-  [pen [a b]]
-  nil)
+;; change definitions... convert all to edge lists at the beginning
+;; and then work from that. (farm definition?)
+
+(defn sort-edge
+  "Sorts an edge so that the smaller node comes first."
+  [[a b]]
+  (if (< a b) [a b] [b a]))
+
+(defn pen->edges
+  "Converts a pen to a collection of edges."
+  [pen]
+  (let [rotated (take (count pen) (rest (cycle pen)))]
+    (map (comp sort-edge vector) pen rotated)))
+
+;; (defn has-edge
+;;   "Returns true if the pen has the given edge."
+;;   [pen [a b]]
+;;   nil)
 
 (defn trample
   "Removes an edge from a farm. If the edge is shared, the two pens will be
