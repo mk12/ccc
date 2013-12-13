@@ -2,18 +2,19 @@
 ;;; 2010 Canadian Computing Competition: Senior Division
 ;;; Problem S4: Animal Farm
 
-(ns ccc.y2010.s4)
+(ns ccc.y2010.s4
+  (:require [clojure.set :as s]
+            [clojure.contrib.seq :as q]))
 
 ;;; A "node" is an integer representing a point in an undirected graph.
 ;;; An "edge" is a collection of exactly two nodes, in increasing order.
-;;; A "pen" is a collection of edges. The edges should form a closed polygon.
+;;; An "edge pen" is a collection of edges forming a closed polygon.
 ;;; A "vertex pen" is a collection of nodes that are conneced to form edges.
-;;; For example, the pen [1 2 3] represents three edges connecting 1 and 2, 2
-;;; and 3, and 3 and 1, forming a triangle.
-;;; A "farm" is a collection of pens.
+;;; (Vertex pen [1 2 3] and edge pen [[1 2] [2 3] [3 1]] are equivalent.)
+;;; An "edge farm" is a collection of edge pens.
 ;;; A "vertex farm" is a collection of vertex pens.
-;;; A "receipt" is a map from edges to integers representing the cost of
-;;; trampling that edge.
+;;; A "receipt" is a map from edges to integers that represent the cost of
+;;; trampling (destroying) that edge.
 
 (defn sort-edge
   "Sorts an edge so that the smaller node comes first."
@@ -27,14 +28,23 @@
     (map (comp sort-edge vector) verts rotated)))
 
 (defn trample
-  "Removes an edge from a farm. If the edge is shared, the two pens will be
-  combined and the farm's length will decrease by one."
+  "Removes an edge from an edge farm. If the edge is shared, the two edge pens
+  will be combined and the farm's length will decrease by one. The pens in the
+  are assumed to be sets."
   [farm edge]
-  (let [[pen1 pen2] (filter #{edge} farm)]
-    nil))
+  (let [[[p1 p2] others] (q/separate #(contains? % edge) farm)
+        combined (s/union (s/difference p1 p2) (s/difference p2 p1))]
+    (conj others combined)))
+
+(defn best-pen
+  "Returns the pen in the farm that has the most connections to other pens. A
+  pen has a single connectionw with another if they share one or more edges."
+  [farm]
+  nil)
 
 (defn main
   "Determines the minimal cost that will allow all animals to gather in one pen
   or outside all the pens given a vertex farm and its receipt."
   [vert-farm receipt]
-  nil)
+  (let [farm (map verts->edges vert-farm)]
+    nil))
