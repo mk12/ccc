@@ -34,10 +34,10 @@
   [grouping houses]
   (->> grouping
        (reduce
-         (fn [[groups more] len]
-           [(conj groups (take len more))
-            (drop len more)])
-         [[] houses])
+        (fn [[groups more] len]
+          [(conj groups (take len more))
+           (drop len more)])
+        [[] houses])
        (apply conj)))
 
 (defn all-groupings
@@ -45,13 +45,13 @@
   preserving their original order. Returns a collection of groupings."
   [n k]
   (cond
-    (= n 1) '(())
-    (>= n k) (list (repeat (- k 1) 1))
-    :else
-    (let [takes (range 1 (+ (- n) k 2))]
-      (->> (map #(all-groupings (dec n) (- k %)) takes)
-           (map (fn [t group] (map #(conj % t) group)) takes)
-           (apply concat)))))
+   (= n 1) '(())
+   (>= n k) (list (repeat (- k 1) 1))
+   :else
+   (let [takes (range 1 (+ (- n) k 2))]
+     (->> (map #(all-groupings (dec n) (- k %)) takes)
+          (map (fn [t group] (map #(conj % t) group)) takes)
+          (apply concat)))))
 
 (defn group-lengths
   "Partitions houses into n subcollections such that the sum of their lengths is

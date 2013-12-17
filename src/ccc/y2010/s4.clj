@@ -3,16 +3,15 @@
 ;;; Problem S4: Animal Farm
 
 (ns ccc.y2010.s4
-  (:require [clojure.set :as s]
-            [clojure.contrib.seq :as q]))
+  (:require [clojure.set :as s]))
 
-;;; A "node" is an integer representing a point in an undirected graph.
+;;; A "node" is an integer representing a point on an undirected graph.
 ;;; An "edge" is a collection of exactly two nodes, in increasing order.
-;;; An "edge pen" is a collection of edges forming a closed polygon.
-;;; A "vertex pen" is a collection of nodes that are conneced to form edges.
-;;; (Vertex pen [1 2 3] and edge pen [[1 2] [2 3] [3 1]] are equivalent.)
-;;; An "edge farm" is a collection of edge pens.
-;;; A "vertex farm" is a collection of vertex pens.
+;;; A "polygon" is a set of edges forming a closed polygon.
+;;; A "mesh" is a set of pens.
+;;; A "pen" is a collection of nodes that represent a polygon.
+;;; (The pen [1 2 3] and the polygon #{[1 2] [2 3] [3 1]} are equivalent.)
+;;; A "farm" is a collection of pens.
 ;;; A "receipt" is a map from edges to integers that represent the cost of
 ;;; trampling (destroying) that edge.
 
@@ -21,30 +20,47 @@
   [[a b]]
   (if (< a b) [a b] [b a]))
 
-(defn verts->edges
-  "Converts a vertex pen to a pen."
-  [verts]
-  (let [rotated (take (count verts) (rest (cycle verts)))]
-    (map (comp sort-edge vector) verts rotated)))
+(defn pen->polygon
+  "Converts a pen (collection of nodes) to a polygon (set of edges)."
+  [pen]
+  (let [rotated (take (count pen) (rest (cycle pen)))]
+    (set (map (comp sort-edge vector) pen rotated))))
+
+(defn farm->mesh
+  "Converts a farm (collection of pens) to a mesh (set of polygons)."
+  [farm]
+  (conj (set (map pen->polygon farm)) #{}))
+
+(defn sym-difference
+  "Returns a set of the elements that the sets do not share in common."
+  [sets]
+  (s/difference (apply s/union sets)
+                (apply s/intersection sets)))
 
 (defn trample
-  "Removes an edge from an edge farm. If the edge is shared, the two edge pens
-  will be combined and the farm's length will decrease by one. The pens in the
-  are assumed to be sets."
-  [farm edge]
-  (let [[[p1 p2] others] (q/separate #(contains? % edge) farm)
-        combined (s/union (s/difference p1 p2) (s/difference p2 p1))]
+  "Removes an edge from a mesh. If the edge is shared between multiple polygons
+  (including the outside, #{}), they will be combined into a single polygon. The
+  returned mesh will always have at least one fewer polygons."
+  [mesh edge]
+  (let [border? #(contains? % edge)
+        sharing (filter border? mesh)
+        others (remove border? mesh)
+        combined (sym-difference sharing)]
     (conj others combined)))
 
-(defn best-pen
-  "Returns the pen in the farm that has the most connections to other pens. A
-  pen has a single connectionw with another if they share one or more edges."
-  [farm]
+(defn best-polygon
+  "Returns the polygon in the mesh that has the most connections to other
+  polygons. A polygon has a single connection with another if they share one or
+  more edges. An unshared edge is actually shared with the outside, #{}."
+  [mesh]
   nil)
 
 (defn main
   "Determines the minimal cost that will allow all animals to gather in one pen
-  or outside all the pens given a vertex farm and its receipt."
-  [vert-farm receipt]
-  (let [farm (map verts->edges vert-farm)]
-    nil))
+  or outside all the pens given a farm and its receipt."
+  [farm receipt]
+  nil)
+
+; no sharer -> remove whole pen
+; combines with the outisde -> gone
+; done when #pens <= 1
