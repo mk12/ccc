@@ -55,13 +55,13 @@
   preserving their original order. Returns a collection of groupings."
   [n k]
   (cond
-   (> n k) (list (repeat k 1))
-   (= n 1) (map list (range 1 (inc k)))
-   :else
-   (let [takes (range 1 (+ (- n) k 2))]
-     (->> (map #(all-groupings (dec n) (- k %)) takes)
-          (map (fn [t group] (map #(conj % t) group)) takes)
-          (apply concat)))))
+    (> n k) (list (repeat k 1))
+    (= n 1) (map list (range 1 (inc k)))
+    :else
+    (let [takes (range 1 (+ (- n) k 2))]
+      (->> (map #(all-groupings (dec n) (- k %)) takes)
+           (map (fn [t group] (map #(conj % t) group)) takes)
+           (apply concat)))))
 
 (defn groupings->lengths
   "Given a collection of houses, converts a collection of groupings to a

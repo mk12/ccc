@@ -25,5 +25,5 @@
   [coll]
   (->> (first-differences coll)
        (reduce scan-val [[] 0])
-       (first)
-       (count)))
+       first
+       count))

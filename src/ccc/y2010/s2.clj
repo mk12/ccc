@@ -23,5 +23,5 @@
   [huff-map bin-seq]
   (let [decode (partial decode-bit huff-map)]
     (->> (reduce decode [[] []] bin-seq)
-         (second)
+         second
          (apply str))))
