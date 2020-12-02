@@ -12,4 +12,4 @@ These solutions do not parse input strings, so this project is not meant to be c
 
 © 2013 Mitchell Kember
 
-CCC is available under the MIT License; see [LICENSE](LICENSE.md) for details.
+These CCC solutions are available under the MIT License; see [LICENSE](LICENSE.md) for details.
